@@ -3,9 +3,9 @@
 
 FROM runpod/worker-comfyui:5.7.1-base
 
-# Download diffusion model (Flux Fill Dev - from Comfy-Org public mirror)
+# Download diffusion model (Flux Fill Dev - from camenduru public mirror)
 RUN comfy model download \
-    --url https://huggingface.co/Comfy-Org/flux1-fill-dev/resolve/main/flux1-fill-dev.safetensors \
+    --url https://huggingface.co/camenduru/FLUX.1-dev/resolve/main/flux1-fill-dev.safetensors \
     --relative-path models/diffusion_models \
     --filename flux1-fill-dev.safetensors
 
