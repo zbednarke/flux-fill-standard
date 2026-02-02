@@ -4,21 +4,18 @@
 FROM runpod/worker-comfyui:5.7.1-base
 
 # =============================================================================
-# LORAS (FIRST - fail fast if Civitai token is missing/invalid)
+# LORAS (from GCS - no auth required)
 # =============================================================================
-
-# Note: Civitai requires API token - pass as build arg
-ARG CIVITAI_API_TOKEN=""
 
 # Download NSFW Master FLUX LoRA for Z-Image Turbo (1.16 GB)
 RUN comfy model download \
-    --url "https://civitai.com/api/download/models/2607212?type=Model&format=SafeTensor&token=${CIVITAI_API_TOKEN}" \
+    --url "https://storage.googleapis.com/parabolio-model-assets/loras/nsfw_master_flux_z_image_turbo.safetensors" \
     --relative-path models/loras \
     --filename nsfw_master_flux_z_image_turbo.safetensors
 
 # Download NSFW Master FLUX LoRA for FLUX.1 (164 MB)
 RUN comfy model download \
-    --url "https://civitai.com/api/download/models/746602?type=Model&format=SafeTensor&token=${CIVITAI_API_TOKEN}" \
+    --url "https://storage.googleapis.com/parabolio-model-assets/loras/nsfw_master_flux.safetensors" \
     --relative-path models/loras \
     --filename nsfw_master_flux.safetensors
 
