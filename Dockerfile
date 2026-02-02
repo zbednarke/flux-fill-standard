@@ -4,6 +4,25 @@
 FROM runpod/worker-comfyui:5.7.1-base
 
 # =============================================================================
+# LORAS (FIRST - fail fast if Civitai token is missing/invalid)
+# =============================================================================
+
+# Note: Civitai requires API token - pass as build arg
+ARG CIVITAI_API_TOKEN=""
+
+# Download NSFW Master FLUX LoRA for Z-Image Turbo (1.16 GB)
+RUN comfy model download \
+    --url "https://civitai.com/api/download/models/2607212?type=Model&format=SafeTensor&token=${CIVITAI_API_TOKEN}" \
+    --relative-path models/loras \
+    --filename nsfw_master_flux_z_image_turbo.safetensors
+
+# Download NSFW Master FLUX LoRA for FLUX.1 (164 MB)
+RUN comfy model download \
+    --url "https://civitai.com/api/download/models/746602?type=Model&format=SafeTensor&token=${CIVITAI_API_TOKEN}" \
+    --relative-path models/loras \
+    --filename nsfw_master_flux.safetensors
+
+# =============================================================================
 # FLUX FILL INPAINTING MODELS (~32.5 GB)
 # =============================================================================
 
@@ -49,22 +68,3 @@ RUN comfy model download \
     --url https://huggingface.co/Comfy-Org/Lumina_Image_2.0_Repackaged/resolve/main/split_files/vae/ae.safetensors \
     --relative-path models/vae \
     --filename ae.safetensors
-
-# =============================================================================
-# LORAS
-# =============================================================================
-
-# Note: Civitai may require API token - pass as build arg if needed
-ARG CIVITAI_API_TOKEN=""
-
-# Download NSFW Master FLUX LoRA for Z-Image Turbo (1.16 GB)
-RUN comfy model download \
-    --url "https://civitai.com/api/download/models/2607212?type=Model&format=SafeTensor&token=${CIVITAI_API_TOKEN}" \
-    --relative-path models/loras \
-    --filename nsfw_master_flux_z_image_turbo.safetensors
-
-# Download NSFW Master FLUX LoRA for FLUX.1 (164 MB)
-RUN comfy model download \
-    --url "https://civitai.com/api/download/models/746602?type=Model&format=SafeTensor&token=${CIVITAI_API_TOKEN}" \
-    --relative-path models/loras \
-    --filename nsfw_master_flux.safetensors
