@@ -1,0 +1,26 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/parabolio/flux-fill-standard:latest'
+      - '-f'
+      - 'Dockerfile'
+      - '.'
+
+  # Push the image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/parabolio/flux-fill-standard:latest']
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/parabolio/flux-fill-standard:latest'
+
+# 2 hour timeout (model downloads are ~50GB total)
+timeout: 7200s
+
+options:
+  # Use a bigger machine for faster builds
+  machineType: 'E2_HIGHCPU_8'
+  # 200GB disk for large models
+  diskSizeGb: 200
