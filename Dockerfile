@@ -1,35 +1,29 @@
-# Flux Fill Inpainting + Z Image Turbo - RunPod Serverless Worker
-# Includes both FLUX Fill and Z Image Turbo workflows
+# Flux Fill Inpainting - RunPod Serverless Worker
+# Only includes FLUX Fill models and LORA
 
 FROM runpod/worker-comfyui:5.7.1-base
 
 # =============================================================================
-# LORAS (from GCS - no auth required)
+# LORA
 # =============================================================================
 
-# Download NSFW Master FLUX LoRA for Z-Image Turbo (1.16 GB)
-RUN comfy model download \
-    --url "https://storage.googleapis.com/parabolio-model-assets/loras/nsfw_master_flux_z_image_turbo.safetensors" \
-    --relative-path models/loras \
-    --filename nsfw_master_flux_z_image_turbo.safetensors
-
-# Download NSFW Master FLUX LoRA for FLUX.1 (164 MB)
+# NSFW Master FLUX LoRA (164 MB)
 RUN comfy model download \
     --url "https://storage.googleapis.com/parabolio-model-assets/loras/nsfw_master_flux.safetensors" \
     --relative-path models/loras \
     --filename nsfw_master_flux.safetensors
 
 # =============================================================================
-# FLUX FILL INPAINTING MODELS (~32.5 GB)
+# FLUX FILL MODELS (~32.5 GB)
 # =============================================================================
 
-# Download diffusion model (Flux Fill Dev - from camenduru public mirror)
+# Flux Fill Dev diffusion model (~23GB)
 RUN comfy model download \
     --url https://huggingface.co/camenduru/FLUX.1-dev/resolve/main/flux1-fill-dev.safetensors \
     --relative-path models/diffusion_models \
     --filename flux1-fill-dev.safetensors
 
-# Download text encoders for FLUX (CLIP L + T5-XXL)
+# Text encoders (CLIP L + T5-XXL, ~10GB total)
 RUN comfy model download \
     --url https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors \
     --relative-path models/text_encoders \
@@ -40,27 +34,7 @@ RUN comfy model download \
     --relative-path models/text_encoders \
     --filename t5xxl_fp16.safetensors
 
-# =============================================================================
-# Z IMAGE TURBO MODELS (~19.5 GB)
-# =============================================================================
-
-# Download Z Image Turbo diffusion model (BF16)
-RUN comfy model download \
-    --url https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors \
-    --relative-path models/diffusion_models \
-    --filename z_image_turbo_bf16.safetensors
-
-# Download Qwen 3 4B text encoder for Z Image Turbo
-RUN comfy model download \
-    --url https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors \
-    --relative-path models/text_encoders \
-    --filename qwen_3_4b.safetensors
-
-# =============================================================================
-# SHARED MODELS
-# =============================================================================
-
-# Download VAE (shared by both workflows)
+# VAE (~335MB)
 RUN comfy model download \
     --url https://huggingface.co/Comfy-Org/Lumina_Image_2.0_Repackaged/resolve/main/split_files/vae/ae.safetensors \
     --relative-path models/vae \
